@@ -174,7 +174,7 @@
 											"    pm.expect(jsonData).to.have.property(\"status\");",
 											"});",
 											"",
-											"const expectedID = 9223372036854763526;",
+											"const expectedID = 9223372036854775013;",
 											"const responseJsonID = pm.response.json();",
 											"pm.test(\"Validate ID in response\", function(){",
 											"    pm.expect(responseJsonID.id).to.eql(expectedID)",
@@ -227,8 +227,7 @@
 									"variable": [
 										{
 											"key": "petId",
-											"value": "9223372036854763526",
-											"description": "(Required) ID of pet to return"
+											"value": "9223372036854775013"
 										}
 									]
 								},
@@ -528,7 +527,7 @@
 									"variable": [
 										{
 											"key": "petId",
-											"value": "9223372036854764755",
+											"value": "9223372036854775067",
 											"description": "(Required) Pet id to delete"
 										}
 									]
@@ -628,7 +627,7 @@
 											"pm.test(\"Status code is 200\", function () {",
 											"    pm.response.to.have.status(200);",
 											"});",
-											"pm.test(\"Response Body contains string\", function () {",
+											"pm.test(\"Response Body contains status string peding\", function () {",
 											"    pm.expect(pm.response.text()).to.include(\"pending\");",
 											"});"
 										],
@@ -637,6 +636,9 @@
 									}
 								}
 							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
 							"request": {
 								"auth": {
 									"type": "oauth2",
@@ -665,6 +667,15 @@
 										"value": "application/json"
 									}
 								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
 									"raw": "{{baseUrl}}/pet/findByStatus?status=pending",
 									"host": [
@@ -927,16 +938,6 @@
 									"pm.test(\"Body matches string to doggie\", function () {",
 									"    pm.expect(pm.response.text()).to.include(\"doggie\");",
 									"});",
-									"// Parse the JSON response",
-									"var jsonData = pm.response.json();",
-									"",
-									"// Save the generated ID to an environment variable",
-									"pm.environment.set(\"petId\", jsonData.id);",
-									"",
-									"// Confirm the ID has been saved in the test results",
-									"pm.test(\"Verified Pet ID\", function () {",
-									"    pm.expect(pm.environment.get(\"petId\")).to.eql(jsonData.id);",
-									"});",
 									"",
 									"if (pm.response.code === 200) {",
 									"    pm.test(\"Response contains id, category, name\", function () {",
@@ -1052,144 +1053,6 @@
 					]
 				},
 				{
-					"name": "Add another new pet to the store Copy",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"pm.test(\"Body matches string to doggie\", function () {",
-									"    pm.expect(pm.response.text()).to.include(\"doggie\");",
-									"});",
-									"// Parse the JSON response",
-									"var jsonData = pm.response.json();",
-									"",
-									"// Save the generated ID to an environment variable",
-									"pm.environment.set(\"petId\", jsonData.id);",
-									"",
-									"// Confirm the ID has been saved in the test results",
-									"pm.test(\"Verified Pet ID\", function () {",
-									"    pm.expect(pm.environment.get(\"petId\")).to.eql(jsonData.id);",
-									"});",
-									"",
-									"if (pm.response.code === 200) {",
-									"    pm.test(\"Response contains id, category, name\", function () {",
-									"        const jsonData = pm.response.json();",
-									"        pm.expect(jsonData).to.have.property(\"id\");",
-									"        pm.expect(jsonData).to.have.property(\"category\");",
-									"        pm.expect(jsonData).to.have.property(\"name\");",
-									"    });",
-									"} else {",
-									"    pm.test(\"Error: Response code is not 200\", function () {",
-									"        pm.expect(pm.response.code).to.eql(200);",
-									"    });",
-									"}",
-									"",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "oauth2",
-							"oauth2": [
-								{
-									"key": "scope",
-									"value": "read:pets write:pets",
-									"type": "string"
-								},
-								{
-									"key": "authUrl",
-									"value": "https://petstore.swagger.io/oauth/authorize",
-									"type": "string"
-								},
-								{
-									"key": "grant_type",
-									"value": "implicit",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"id\": 0,\n  \"category\": {\n    \"id\": 0,\n    \"name\": \"string\"\n  },\n  \"name\": \"roaverbieber\",\n  \"photoUrls\": [\n    \"string\"\n  ],\n  \"tags\": [\n    {\n      \"id\": 0,\n      \"name\": \"string\"\n    }\n  ],\n  \"status\": \"available\"\n}",
-							"options": {
-								"raw": {
-									"headerFamily": "json",
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/pet",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"pet"
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "Invalid input",
-							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Authorization",
-										"value": "<token>",
-										"description": "Added as a part of security scheme: oauth2"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n  \"name\": \"<string>\",\n  \"photoUrls\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"id\": \"<long>\",\n  \"category\": {\n    \"id\": \"<long>\",\n    \"name\": \"<string>\"\n  },\n  \"tags\": [\n    {\n      \"id\": \"<long>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"id\": \"<long>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"status\": \"available\"\n}",
-									"options": {
-										"raw": {
-											"headerFamily": "json",
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseUrl}}/pet",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"pet"
-									]
-								}
-							},
-							"status": "Method Not Allowed",
-							"code": 405,
-							"_postman_previewlanguage": "text",
-							"header": [],
-							"cookie": [],
-							"body": ""
-						}
-					]
-				},
-				{
 					"name": "Update an existing pet",
 					"event": [
 						{
@@ -1199,7 +1062,7 @@
 									"pm.test(\"Status code is 200\", function () {",
 									"    pm.response.to.have.status(200);",
 									"});",
-									"pm.test(\"Body matches string\", function () {",
+									"pm.test(\"Body matches the updated new string rocky2\", function () {",
 									"    pm.expect(pm.response.text()).to.include(\"rocky2\");",
 									"});"
 								],
