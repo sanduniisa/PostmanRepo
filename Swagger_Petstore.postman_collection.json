@@ -889,7 +889,11 @@
 									"    pm.test(\"Error: Response code is not 200\", function () {",
 									"        pm.expect(pm.response.code).to.eql(200);",
 									"    });",
-									"}"
+									"}",
+									"pm.test(\"Body name Test Dog is correct\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Test Dog\");",
+									"});",
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
