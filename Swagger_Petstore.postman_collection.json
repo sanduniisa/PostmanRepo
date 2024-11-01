@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "00ce94a1-0730-43ca-88e0-e6a9c6485eae",
+		"_postman_id": "edbee74c-b6b4-48b9-b758-39798ffa4789",
 		"name": "Swagger Petstore",
 		"description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.\n\nContact Support:\n Email: apiteam@swagger.io",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -14,7 +14,177 @@
 					"name": "{petId}",
 					"item": [
 						{
-							"name": "Find pet by ID",
+							"name": "uploadImage",
+							"item": [
+								{
+									"name": "uploads an image",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 200\", function () {",
+													"    pm.response.to.have.status(200);",
+													"});",
+													"pm.test(\"Body matches the uploaded file name\", function () {",
+													"    pm.expect(pm.response.text()).to.include(\"doggie.jpeg\");",
+													"});",
+													"",
+													"pm.test(\"Response includes details\", function () {",
+													"    const response = pm.response.json();",
+													"    pm.expect(response).to.have.property(\"code\");",
+													"    pm.expect(response).to.have.property(\"type\");",
+													"    pm.expect(response).to.have.property(\"message\");",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disabledSystemHeaders": {}
+									},
+									"request": {
+										"auth": {
+											"type": "oauth2",
+											"oauth2": [
+												{
+													"key": "scope",
+													"value": "read:pets write:pets",
+													"type": "string"
+												},
+												{
+													"key": "authUrl",
+													"value": "https://petstore.swagger.io/oauth/authorize",
+													"type": "string"
+												},
+												{
+													"key": "grant_type",
+													"value": "implicit",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "multipart/form-data"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "additionalMetadata",
+													"value": "<string>",
+													"description": "Additional data to pass to server",
+													"type": "text"
+												},
+												{
+													"key": "file",
+													"description": "file to upload",
+													"type": "file",
+													"src": "./images/doggie.jpeg"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{baseUrl}}/pet/:petId/uploadImage",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"pet",
+												":petId",
+												"uploadImage"
+											],
+											"variable": [
+												{
+													"key": "petId",
+													"value": "9223372036854775284",
+													"description": "(Required) ID of pet to update"
+												}
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "successful operation",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "multipart/form-data"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"value": "<token>",
+														"description": "Added as a part of security scheme: oauth2"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "additionalMetadata",
+															"value": "<string>",
+															"description": "Additional data to pass to server",
+															"type": "text"
+														},
+														{
+															"key": "file",
+															"description": "file to upload",
+															"type": "file",
+															"src": []
+														}
+													]
+												},
+												"url": {
+													"raw": "{{baseUrl}}/pet/:petId/uploadImage",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"pet",
+														":petId",
+														"uploadImage"
+													],
+													"variable": [
+														{
+															"key": "petId"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json"
+												}
+											],
+											"cookie": [],
+											"body": "{\n  \"code\": \"<integer>\",\n  \"type\": \"<string>\",\n  \"message\": \"<string>\"\n}"
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "Success Operation Find pet by ID",
 							"event": [
 								{
 									"listen": "test",
@@ -31,7 +201,7 @@
 											"    pm.expect(jsonData).to.have.property(\"status\");",
 											"});",
 											"",
-											"const expectedID = 9223372036854775013;",
+											"const expectedID = 9223372036854775729;",
 											"const responseJsonID = pm.response.json();",
 											"pm.test(\"Validate ID in response\", function(){",
 											"    pm.expect(responseJsonID.id).to.eql(expectedID)",
@@ -84,11 +254,561 @@
 									"variable": [
 										{
 											"key": "petId",
-											"value": "9223372036854775227"
+											"value": "9223372036854775729",
+											"description": "(Required) ID of pet to return"
 										}
 									]
 								},
 								"description": "Returns a single pet"
+							},
+							"response": [
+								{
+									"name": "successful operation",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "api_key",
+												"value": "<API Key>",
+												"description": "Added as a part of security scheme: apikey"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/pet/:petId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"pet",
+												":petId"
+											],
+											"variable": [
+												{
+													"key": "petId"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"name\": \"<string>\",\n  \"photoUrls\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"id\": \"<long>\",\n  \"category\": {\n    \"id\": \"<long>\",\n    \"name\": \"<string>\"\n  },\n  \"tags\": [\n    {\n      \"id\": \"<long>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"id\": \"<long>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"status\": \"sold\"\n}"
+								},
+								{
+									"name": "Invalid ID supplied",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "api_key",
+												"value": "<API Key>",
+												"description": "Added as a part of security scheme: apikey"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/pet/:petId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"pet",
+												":petId"
+											],
+											"variable": [
+												{
+													"key": "petId"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Pet not found",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "api_key",
+												"value": "<API Key>",
+												"description": "Added as a part of security scheme: apikey"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/pet/:petId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"pet",
+												":petId"
+											],
+											"variable": [
+												{
+													"key": "petId"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "Invalid ID supplied Find pet by ID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400 \", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"pm.test(\"Response body contains Invalid ID supplied\", function () {",
+											"    pm.expect(pm.response.text()).to.include(\"Invalid ID supplied\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "key",
+											"value": "api_key",
+											"type": "string"
+										},
+										{
+											"key": "value",
+											"value": "{{apiKey}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/pet/:petId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet",
+										":petId"
+									],
+									"variable": [
+										{
+											"key": "petId",
+											"value": "*(%&#@#$87",
+											"description": "(Required) ID of pet to return"
+										}
+									]
+								},
+								"description": "Returns a single pet"
+							},
+							"response": []
+						},
+						{
+							"name": "Invalid ID supplied Find pet by ID - id with integers and letters",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 400 \", function () {",
+											"    pm.response.to.have.status(400);",
+											"});",
+											"pm.test(\"Response body contains Invalid ID supplied\", function () {",
+											"    pm.expect(pm.response.text()).to.include(\"Invalid ID supplied\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "key",
+											"value": "api_key",
+											"type": "string"
+										},
+										{
+											"key": "value",
+											"value": "{{apiKey}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/pet/:petId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet",
+										":petId"
+									],
+									"variable": [
+										{
+											"key": "petId",
+											"value": "-77648w",
+											"description": "(Required) ID of pet to return"
+										}
+									]
+								},
+								"description": "Returns a single pet"
+							},
+							"response": []
+						},
+						{
+							"name": "Pet not Found Find pet by ID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 404\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});",
+											"",
+											"pm.test(\"response body contains Pet not found\", function () {",
+											"    pm.expect(pm.response.text()).to.include(\"Pet not found\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "key",
+											"value": "api_key",
+											"type": "string"
+										},
+										{
+											"key": "value",
+											"value": "{{apiKey}}",
+											"type": "string"
+										},
+										{
+											"key": "in",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/pet/:petId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet",
+										":petId"
+									],
+									"variable": [
+										{
+											"key": "petId",
+											"value": "9223372036854775245",
+											"description": "(Required) ID of pet to return"
+										}
+									]
+								},
+								"description": "Returns a single pet"
+							},
+							"response": []
+						},
+						{
+							"name": "Updates a pet in the store with form data",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const updatedPetId = \"9223372036854775235\"; ",
+											"const response = pm.response.json();",
+											"",
+											"pm.test(\"Response code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"pm.test(\"Message contains updated pet ID\", function () {",
+											"    pm.expect(response.message).to.eql(updatedPetId);",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "scope",
+											"value": "read:pets write:pets",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "https://petstore.swagger.io/oauth/authorize",
+											"type": "string"
+										},
+										{
+											"key": "grant_type",
+											"value": "implicit",
+											"type": "string"
+										},
+										{
+											"key": "addTokenTo",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "timmy",
+											"description": "Updated name of the pet"
+										},
+										{
+											"key": "status",
+											"value": "sold",
+											"description": "Updated status of the pet"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/pet/:petId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet",
+										":petId"
+									],
+									"variable": [
+										{
+											"key": "petId",
+											"value": "9223372036854775235"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Invalid input",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "name",
+													"value": "<string>",
+													"description": "Updated name of the pet"
+												},
+												{
+													"key": "status",
+													"value": "<string>",
+													"description": "Updated status of the pet"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{baseUrl}}/pet/:petId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"pet",
+												":petId"
+											],
+											"variable": [
+												{
+													"key": "petId"
+												}
+											]
+										}
+									},
+									"status": "Method Not Allowed",
+									"code": 405,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "Updates a pet in the store with form data with invalid data",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response code is 405\", function () {",
+											"    pm.response.to.have.status(405);",
+											"});",
+											"pm.test(\"response body contains Invalid input \", function () {",
+											"    pm.expect(pm.response.text()).to.include(\"Invalid input\");",
+											"});",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "scope",
+											"value": "read:pets write:pets",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "https://petstore.swagger.io/oauth/authorize",
+											"type": "string"
+										},
+										{
+											"key": "grant_type",
+											"value": "implicit",
+											"type": "string"
+										},
+										{
+											"key": "addTokenTo",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "jimmy",
+											"description": "Updated name of the pet"
+										},
+										{
+											"key": "status",
+											"value": "Inprogress",
+											"description": "Updated status of the pet"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/pet/:petId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet",
+										":petId"
+									],
+									"variable": [
+										{
+											"key": "petId",
+											"value": "9223372016900017038"
+										}
+									]
+								}
 							},
 							"response": []
 						},
@@ -143,15 +863,6 @@
 										"value": "<string>"
 									}
 								],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
 								"url": {
 									"raw": "{{baseUrl}}/pet/:petId",
 									"host": [
@@ -164,78 +875,102 @@
 									"variable": [
 										{
 											"key": "petId",
-											"value": "9223372036854774848",
+											"value": "9223372036854775742",
 											"description": "(Required) Pet id to delete"
 										}
 									]
 								}
 							},
-							"response": []
-						},
-						{
-							"name": "Pet not found",
-							"event": [
+							"response": [
 								{
-									"listen": "test",
-									"script": {
-										"exec": [
-											"pm.test(\"Status code is 404\", function () {",
-											"    pm.response.to.have.status(404);",
-											"});",
-											"",
-											"pm.test(\"response body contains Pet not found\", function () {",
-											"    pm.expect(pm.response.text()).to.include(\"Pet not found\");",
-											"});"
+									"name": "Invalid ID supplied",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "api_key",
+												"value": "<string>"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
 										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
+										"url": {
+											"raw": "{{baseUrl}}/pet/:petId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"pet",
+												":petId"
+											],
+											"variable": [
+												{
+													"key": "petId"
+												}
+											]
 										}
-									}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
 								},
-								"url": {
-									"raw": "{{baseUrl}}/pet/:petId",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"pet",
-										":petId"
-									],
-									"variable": [
-										{
-											"key": "petId",
-											"value": "71"
+								{
+									"name": "Pet not found",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "api_key",
+												"value": "<string>"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/pet/:petId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"pet",
+												":petId"
+											],
+											"variable": [
+												{
+													"key": "petId"
+												}
+											]
 										}
-									]
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
 								}
-							},
-							"response": []
+							]
 						},
 						{
-							"name": "Invalid ID supplied",
+							"name": "Deletes a pet Invalid ID supplied",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Status code is 400 \", function () {",
+											"pm.test(\"Status code is 400\", function () {",
 											"    pm.response.to.have.status(400);",
 											"});",
+											"",
 											"pm.test(\"Response body contains Invalid ID supplied\", function () {",
 											"    pm.expect(pm.response.text()).to.include(\"Invalid ID supplied\");",
 											"});"
@@ -245,21 +980,34 @@
 									}
 								}
 							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
 							"request": {
-								"method": "GET",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "scope",
+											"value": "read:pets write:pets",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "https://petstore.swagger.io/oauth/authorize",
+											"type": "string"
+										},
+										{
+											"key": "grant_type",
+											"value": "implicit",
+											"type": "string"
 										}
-									}
+									]
 								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "api_key",
+										"value": "<string>"
+									}
+								],
 								"url": {
 									"raw": "{{baseUrl}}/pet/:petId",
 									"host": [
@@ -272,7 +1020,76 @@
 									"variable": [
 										{
 											"key": "petId",
-											"value": "*(%&#@#$87"
+											"value": "@#$%^7",
+											"description": "(Required) Pet id to delete"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Deletes a pet not found in store",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 404\", function () {",
+											"    pm.response.to.have.status(404);",
+											"});",
+											"",
+											"pm.test(\"Response body contains Pet not found\", function () {",
+											"    pm.expect(pm.response.text()).to.include(\"Pet not found\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "scope",
+											"value": "read:pets write:pets",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "https://petstore.swagger.io/oauth/authorize",
+											"type": "string"
+										},
+										{
+											"key": "grant_type",
+											"value": "implicit",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "api_key",
+										"value": "<string>"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/pet/:petId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet",
+										":petId"
+									],
+									"variable": [
+										{
+											"key": "petId",
+											"value": "9223372016900017412",
+											"description": "(Required) Pet id to delete"
 										}
 									]
 								}
@@ -303,9 +1120,6 @@
 									}
 								}
 							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
 							"request": {
 								"auth": {
 									"type": "oauth2",
@@ -334,15 +1148,6 @@
 										"value": "application/json"
 									}
 								],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
 								"url": {
 									"raw": "{{baseUrl}}/pet/findByStatus?status=pending",
 									"host": [
@@ -355,17 +1160,98 @@
 									"query": [
 										{
 											"key": "status",
-											"value": "pending",
-											"description": "(Required) Status values that need to be considered for filter"
+											"value": "pending"
 										}
 									]
 								},
 								"description": "Multiple status values can be provided with comma separated strings"
 							},
-							"response": []
+							"response": [
+								{
+									"name": "successful operation",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/pet/findByStatus?status=available",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"pet",
+												"findByStatus"
+											],
+											"query": [
+												{
+													"key": "status",
+													"value": "available",
+													"description": "(Required) Status values that need to be considered for filter"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "[\n  {\n    \"name\": \"<string>\",\n    \"photoUrls\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"id\": \"<long>\",\n    \"category\": {\n      \"id\": \"<long>\",\n      \"name\": \"<string>\"\n    },\n    \"tags\": [\n      {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\"\n      },\n      {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\"\n      }\n    ],\n    \"status\": \"available\"\n  },\n  {\n    \"name\": \"<string>\",\n    \"photoUrls\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"id\": \"<long>\",\n    \"category\": {\n      \"id\": \"<long>\",\n      \"name\": \"<string>\"\n    },\n    \"tags\": [\n      {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\"\n      },\n      {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\"\n      }\n    ],\n    \"status\": \"available\"\n  }\n]"
+								},
+								{
+									"name": "Invalid status value",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/pet/findByStatus?status=available",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"pet",
+												"findByStatus"
+											],
+											"query": [
+												{
+													"key": "status",
+													"value": "available",
+													"description": "(Required) Status values that need to be considered for filter"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								}
+							]
 						},
 						{
-							"name": "Invalid Status Value",
+							"name": "Invalid status value",
 							"event": [
 								{
 									"listen": "test",
@@ -384,21 +1270,9 @@
 									}
 								}
 							],
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
 							"request": {
 								"method": "GET",
 								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
 								"url": {
 									"raw": "{{baseUrl}}/pet/findByStatus?status=friendly",
 									"host": [
@@ -421,6 +1295,149 @@
 					]
 				},
 				{
+					"name": "findByTags",
+					"item": [
+						{
+							"name": "Finds Pets by tags",
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "scope",
+											"value": "read:pets write:pets",
+											"type": "string"
+										},
+										{
+											"key": "authUrl",
+											"value": "https://petstore.swagger.io/oauth/authorize",
+											"type": "string"
+										},
+										{
+											"key": "grant_type",
+											"value": "implicit",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/pet/findByTags?tags=<string>&tags=<string>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet",
+										"findByTags"
+									],
+									"query": [
+										{
+											"key": "tags",
+											"value": "<string>",
+											"description": "(Required) Tags to filter by"
+										},
+										{
+											"key": "tags",
+											"value": "<string>",
+											"description": "(Required) Tags to filter by"
+										}
+									]
+								},
+								"description": "Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing."
+							},
+							"response": [
+								{
+									"name": "successful operation",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/pet/findByTags?tags=<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"pet",
+												"findByTags"
+											],
+											"query": [
+												{
+													"key": "tags",
+													"value": "<string>",
+													"description": "(Required) Tags to filter by"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "[\n  {\n    \"name\": \"<string>\",\n    \"photoUrls\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"id\": \"<long>\",\n    \"category\": {\n      \"id\": \"<long>\",\n      \"name\": \"<string>\"\n    },\n    \"tags\": [\n      {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\"\n      },\n      {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\"\n      }\n    ],\n    \"status\": \"available\"\n  },\n  {\n    \"name\": \"<string>\",\n    \"photoUrls\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"id\": \"<long>\",\n    \"category\": {\n      \"id\": \"<long>\",\n      \"name\": \"<string>\"\n    },\n    \"tags\": [\n      {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\"\n      },\n      {\n        \"id\": \"<long>\",\n        \"name\": \"<string>\"\n      }\n    ],\n    \"status\": \"available\"\n  }\n]"
+								},
+								{
+									"name": "Invalid tag value",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "<token>",
+												"description": "Added as a part of security scheme: oauth2"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/pet/findByTags?tags=<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"pet",
+												"findByTags"
+											],
+											"query": [
+												{
+													"key": "tags",
+													"value": "<string>",
+													"description": "(Required) Tags to filter by"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					]
+				},
+				{
 					"name": "Add a new pet to the store",
 					"event": [
 						{
@@ -431,8 +1448,8 @@
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test(\"Body matches string to doggie\", function () {",
-									"    pm.expect(pm.response.text()).to.include(\"doggie\");",
+									"pm.test(\"Body matches string to ducky\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"ducky\");",
 									"});",
 									"",
 									"if (pm.response.code === 200) {",
@@ -485,7 +1502,611 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"id\": 0,\n  \"category\": {\n    \"id\": 0,\n    \"name\": \"string\"\n  },\n  \"name\": \"doggie\",\n  \"photoUrls\": [\n    \"string\"\n  ],\n  \"tags\": [\n    {\n      \"id\": 0,\n      \"name\": \"string\"\n    }\n  ],\n  \"status\": \"available\"\n}",
+							"raw": "{\n  \"id\": 0,\n  \"category\": {\n    \"id\": 0,\n    \"name\": \"string\"\n  },\n  \"name\": \"ducky\",\n  \"photoUrls\": [\n    \"string\"\n  ],\n  \"tags\": [\n    {\n      \"id\": 0,\n      \"name\": \"string\"\n    }\n  ],\n  \"status\": \"available\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pet",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pet"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Invalid input",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"<string>\",\n  \"photoUrls\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"id\": \"<long>\",\n  \"category\": {\n    \"id\": \"<long>\",\n    \"name\": \"<string>\"\n  },\n  \"tags\": [\n    {\n      \"id\": \"<long>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"id\": \"<long>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"status\": \"sold\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/pet",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet"
+									]
+								}
+							},
+							"status": "Method Not Allowed",
+							"code": 405,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Add a new pet to the store with Invalid input",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 405\", function () {",
+									"    pm.response.to.have.status(405);",
+									"});",
+									"pm.test(\"Response message contains Invalid input\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Invalid input\");",
+									"});",
+									"pm.test(\"Invalid input Add a new pet to the store contains response message code 405\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.code).to.eql(405);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "scope",
+									"value": "read:pets write:pets",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "https://petstore.swagger.io/oauth/authorize",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "implicit",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": 0,\n  \"category\": {\n    \"id\": 0,\n    \"name\": \"string\"\n  },\n  \"name\": \"doggie\",\n  \"photoUrls\": [\n    \"string\"\n  ],\n  \"tags\": [\n    {\n      \"id\": 0,\n      \"name\": \"string\"\n    }\n  ],\n  \"status\": inprogress\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pet",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add a new pet to the store with Invalid input 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 405\", function () {",
+									"    pm.response.to.have.status(405);",
+									"});",
+									"pm.test(\"Response message contains Invalid input\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Invalid input\");",
+									"});",
+									"pm.test(\"Invalid input Add a new pet to the store contains response message code 405\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.code).to.eql(405);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "scope",
+									"value": "read:pets write:pets",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "https://petstore.swagger.io/oauth/authorize",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "implicit",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": 0,\n  \"category\": {\n    \"id\": 0,\n    \"name\": \"string\"\n  },\n  \"name\": \"doggie\",\n  \"photoUrls\": [\n    \"string\"\n  ],\n  \"tags\": [\n    {\n      \"id\": 0,\n      \"name\": \"string\"\n    }\n  ],\n  \"status\": \"inprogress\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pet",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update an existing pet",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Body matches the updated new string chicky\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"chicky\");",
+									"});",
+									"pm.test(\"Response Body contains the Updated ID 9223372016900019931\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.eql(9223372016900019931);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "scope",
+									"value": "read:pets write:pets",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "https://petstore.swagger.io/oauth/authorize",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "implicit",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": 9223372016900019931,\n  \"category\": {\n    \"id\": 0,\n    \"name\": \"string\"\n  },\n  \"name\": \"chicky\",\n  \"photoUrls\": [\n    \"string\"\n  ],\n  \"tags\": [\n    {\n      \"id\": 0,\n      \"name\": \"string\"\n    }\n  ],\n  \"status\": \"available\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pet",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pet"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Invalid ID supplied",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"<string>\",\n  \"photoUrls\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"id\": \"<long>\",\n  \"category\": {\n    \"id\": \"<long>\",\n    \"name\": \"<string>\"\n  },\n  \"tags\": [\n    {\n      \"id\": \"<long>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"id\": \"<long>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"status\": \"sold\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/pet",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Pet not found",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"<string>\",\n  \"photoUrls\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"id\": \"<long>\",\n  \"category\": {\n    \"id\": \"<long>\",\n    \"name\": \"<string>\"\n  },\n  \"tags\": [\n    {\n      \"id\": \"<long>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"id\": \"<long>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"status\": \"sold\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/pet",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Validation exception",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "<token>",
+										"description": "Added as a part of security scheme: oauth2"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"<string>\",\n  \"photoUrls\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"id\": \"<long>\",\n  \"category\": {\n    \"id\": \"<long>\",\n    \"name\": \"<string>\"\n  },\n  \"tags\": [\n    {\n      \"id\": \"<long>\",\n      \"name\": \"<string>\"\n    },\n    {\n      \"id\": \"<long>\",\n      \"name\": \"<string>\"\n    }\n  ],\n  \"status\": \"sold\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/pet",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"pet"
+									]
+								}
+							},
+							"status": "Method Not Allowed",
+							"code": 405,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Update an existing pet with an Invalid ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test(\"Response message contains Invalid ID supplied\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Invalid ID supplied\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "scope",
+									"value": "read:pets write:pets",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "https://petstore.swagger.io/oauth/authorize",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "implicit",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 9223372016900020271%%,\n    \"category\": {\n        \"id\": 0,\n        \"name\": \"string\"\n    },\n    \"name\": \"Puff\",\n    \"photoUrls\": [\n        \"string\"\n    ],\n    \"tags\": [\n        {\n            \"id\": 0,\n            \"name\": \"string\"\n        }\n    ],\n    \"status\": \"available\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pet",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update an existing pet where the pet record not found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"pm.test(\"Response message contains Pet not found\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Pet not found\");",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "scope",
+									"value": "read:pets write:pets",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "https://petstore.swagger.io/oauth/authorize",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "implicit",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": 08,\n  \"category\": {\n    \"id\": 0,\n    \"name\": \"string\"\n  },\n  \"name\": \"nonexistingpet\",\n  \"photoUrls\": [\n    \"string\"\n  ],\n  \"tags\": [\n    {\n      \"id\": 0,\n      \"name\": \"string\"\n    }\n  ],\n  \"status\": \"available\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/pet",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"pet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validation Exception",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 405\", function () {",
+									"    pm.response.to.have.status(405);",
+									"});",
+									"",
+									"pm.test(\"Check Validation exception type\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.type).to.eql(\"Validation exception\");",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "scope",
+									"value": "read:pets write:pets",
+									"type": "string"
+								},
+								{
+									"key": "authUrl",
+									"value": "https://petstore.swagger.io/oauth/authorize",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "implicit",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": -9223372016900020395,\n    \"category\": {\n        \"id\": 0,\n        \"name\": \"string\"\n    },\n    \"name\": \"fish\",\n    \"photoUrls\": [\n        \"string\"\n    ],\n    \"tags\": [\n        {\n            \"id\": 0,\n            \"name\": \"string\"\n        }\n    ],\n    \"status\": true\n}",
 							"options": {
 								"raw": {
 									"headerFamily": "json",
@@ -530,108 +2151,13 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "oauth2",
-							"oauth2": [
-								{
-									"key": "scope",
-									"value": "read:pets write:pets",
-									"type": "string"
-								},
-								{
-									"key": "authUrl",
-									"value": "https://petstore.swagger.io/oauth/authorize",
-									"type": "string"
-								},
-								{
-									"key": "grant_type",
-									"value": "implicit",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"id\": 0,\n  \"category\": {\n    \"id\": 0,\n    \"name\": \"string\"\n  },\n  \"name\": \"doggie\",\n  \"photoUrls\": [\n    \"string\"\n  ],\n  \"tags\": [\n    {\n      \"id\": 0,\n      \"name\": \"string\"\n    }\n  ],\n  \"status\": \"available\"\n}",
 							"options": {
 								"raw": {
-									"headerFamily": "json",
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/pet",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"pet"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update an existing pet",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"pm.test(\"Body matches the updated new string rocky2\", function () {",
-									"    pm.expect(pm.response.text()).to.include(\"rocky2\");",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "oauth2",
-							"oauth2": [
-								{
-									"key": "scope",
-									"value": "read:pets write:pets",
-									"type": "string"
-								},
-								{
-									"key": "authUrl",
-									"value": "https://petstore.swagger.io/oauth/authorize",
-									"type": "string"
-								},
-								{
-									"key": "grant_type",
-									"value": "implicit",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"id\": 0,\n  \"category\": {\n    \"id\": 0,\n    \"name\": \"string\"\n  },\n  \"name\": \"rocky2\",\n  \"photoUrls\": [\n    \"string\"\n  ],\n  \"tags\": [\n    {\n      \"id\": 0,\n      \"name\": \"string\"\n    }\n  ],\n  \"status\": \"available\"\n}",
-							"options": {
-								"raw": {
-									"headerFamily": "json",
 									"language": "json"
 								}
 							}
